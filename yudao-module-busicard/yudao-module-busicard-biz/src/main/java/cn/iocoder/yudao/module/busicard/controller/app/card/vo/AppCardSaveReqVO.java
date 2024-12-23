@@ -13,13 +13,6 @@ import java.time.LocalDateTime;
 @Data
 public class AppCardSaveReqVO {
 
-    @Schema(description = "名片ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "5147")
-    private Long id;
-
-    @Schema(description = "名片编码", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotEmpty(message = "名片编码不能为空")
-    private String cardCode;
-
     @Schema(description = "用户ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "4260")
     @NotNull(message = "用户ID不能为空")
     private Long userId;
@@ -29,7 +22,7 @@ public class AppCardSaveReqVO {
     private Boolean isDefault;
 
     @Schema(description = "名片类型: personal-个人 company-企业", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
-    @NotEmpty(message = "名片类型: personal-个人 company-企业不能为空")
+    @NotEmpty(message = "名片类型不能为空")
     private String cardType;
 
     @Schema(description = "企业编号", example = "15955")
