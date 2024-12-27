@@ -58,4 +58,6 @@ public interface CardService {
     void updateCard(AppCardSaveReqVO updateReqVO);
 
     AppCardRespVO getdefaultCard(Long userId);
+
+    AppCardRespVO getCardByCode(String code);
 }

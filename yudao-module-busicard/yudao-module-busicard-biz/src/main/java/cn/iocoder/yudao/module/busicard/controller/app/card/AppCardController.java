@@ -1,5 +1,7 @@
 package cn.iocoder.yudao.module.busicard.controller.app.card;
 
+import cn.iocoder.yudao.module.busicard.controller.admin.card.vo.CardRespVO;
+import cn.iocoder.yudao.module.busicard.dal.dataobject.card.CardDO;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
 
@@ -40,7 +42,23 @@ public class AppCardController {
     @GetMapping("/get-default")
     @Operation(summary = "获得默认名片")
     public CommonResult<AppCardRespVO> getDefaultCard() {
+        Long userId = getLoginUserId();
         return success(cardService.getdefaultCard(getLoginUserId()));
+    }
+
+
+    @GetMapping("/get")
+    @Operation(summary = "获得名片")
+    @Parameter(name = "id", description = "ID", required = true, example = "1024")
+    public CommonResult<CardRespVO> getCard(@RequestParam("id") Long id) {
+        CardDO card = cardService.getCard(id);
+        return success(BeanUtils.toBean(card, CardRespVO.class));
+    }
+
+    @GetMapping("/get-by-code")
+    @Operation(summary = "根据code查询名片信息")
+    public CommonResult<AppCardRespVO> getCardByCode(@RequestParam("code") String code) {
+        return success(cardService.getCardByCode(code));
     }
 
     @PostMapping("/create")

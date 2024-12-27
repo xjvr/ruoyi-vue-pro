@@ -13,8 +13,7 @@ import java.time.LocalDateTime;
 @Data
 public class AppCardSaveReqVO {
 
-    @Schema(description = "用户ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "4260")
-    @NotNull(message = "用户ID不能为空")
+    @Schema(description = "用户ID", example = "4260")
     private Long userId;
 
     @Schema(description = "是否默认名片", requiredMode = Schema.RequiredMode.REQUIRED)

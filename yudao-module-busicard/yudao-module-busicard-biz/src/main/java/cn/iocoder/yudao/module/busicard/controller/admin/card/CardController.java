@@ -2,7 +2,6 @@ package cn.iocoder.yudao.module.busicard.controller.admin.card;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.security.access.prepost.PreAuthorize;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,14 +29,12 @@ public class CardController {
 
     @PostMapping("/create")
     @Operation(summary = "创建名片")
-    @PreAuthorize("@ss.hasPermission('busicard:card:create')")
     public CommonResult<Long> createCard(@Valid @RequestBody CardSaveReqVO createReqVO) {
         return success(cardService.createCard(createReqVO));
     }
 
     @PutMapping("/update")
     @Operation(summary = "更新名片")
-    @PreAuthorize("@ss.hasPermission('busicard:card:update')")
     public CommonResult<Boolean> updateCard(@Valid @RequestBody CardSaveReqVO updateReqVO) {
         cardService.updateCard(updateReqVO);
         return success(true);
@@ -45,8 +42,7 @@ public class CardController {
 
     @DeleteMapping("/delete")
     @Operation(summary = "删除名片")
-    @Parameter(name = "id", description = "编号", required = true)
-    @PreAuthorize("@ss.hasPermission('busicard:card:delete')")
+    @Parameter(name = "id", description = "ID", required = true)
     public CommonResult<Boolean> deleteCard(@RequestParam("id") Long id) {
         cardService.deleteCard(id);
         return success(true);
@@ -54,8 +50,7 @@ public class CardController {
 
     @GetMapping("/get")
     @Operation(summary = "获得名片")
-    @Parameter(name = "id", description = "编号", required = true, example = "1024")
-    @PreAuthorize("@ss.hasPermission('busicard:card:query')")
+    @Parameter(name = "id", description = "ID", required = true, example = "1024")
     public CommonResult<CardRespVO> getCard(@RequestParam("id") Long id) {
         CardDO card = cardService.getCard(id);
         return success(BeanUtils.toBean(card, CardRespVO.class));
@@ -63,7 +58,6 @@ public class CardController {
 
     @GetMapping("/page")
     @Operation(summary = "获得名片分页")
-    @PreAuthorize("@ss.hasPermission('busicard:card:query')")
     public CommonResult<PageResult<CardRespVO>> getCardPage(@Valid CardPageReqVO pageReqVO) {
         PageResult<CardDO> pageResult = cardService.getCardPage(pageReqVO);
         return success(BeanUtils.toBean(pageResult, CardRespVO.class));
