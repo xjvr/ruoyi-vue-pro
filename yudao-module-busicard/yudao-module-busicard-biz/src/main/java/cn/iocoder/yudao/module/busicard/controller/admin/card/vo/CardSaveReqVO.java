@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -17,14 +18,11 @@ public class CardSaveReqVO {
 
     @Schema(description = "名片编码", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotEmpty(message = "名片编码不能为空")
-    private String cardCode;
+    private String code;
 
     @Schema(description = "用户ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "4260")
     @NotNull(message = "用户ID不能为空")
     private Long userId;
-
-    @Schema(description = "社交用户编号", example = "13313")
-    private Long socialUserId;
 
     @Schema(description = "是否默认名片", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "是否默认名片不能为空")
@@ -47,39 +45,34 @@ public class CardSaveReqVO {
     @Schema(description = "头像地址")
     private String avatar;
 
-    @Schema(description = "个人手机号")
-    private String personalPhone;
+    @Schema(description = "手机号")
+    private String phone;
 
-    @Schema(description = "个人邮箱")
-    private String personalEmail;
+    @Schema(description = "邮箱")
+    private String email;
 
-    @Schema(description = "个人地址")
-    private String personalAddress;
+    @Schema(description = "地址")
+    private String address;
 
-    @Schema(description = "个人微信号")
-    private String personalWechat;
+    @Schema(description = "微信号")
+    private String wechat;
 
-    @Schema(description = "个人微信二维码")
-    private String personalQrcode;
+    @Schema(description = "微信二维码")
+    private String qrcode;
 
-    @Schema(description = "工号")
-    private String employeeNo;
+    /**
+     * 模版code
+     */
+    @Schema(description = "模版code", requiredMode = Schema.RequiredMode.REQUIRED, example = "default")
+    @NotEmpty(message = "模版code不能为空")
+    private String templateCode;
 
-    @Schema(description = "办公电话")
-    private String officePhone;
-
-    @Schema(description = "企业邮箱")
-    private String officeEmail;
-
-    @Schema(description = "分机号")
-    private String extensionNumber;
-
-    @Schema(description = "样式类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @NotEmpty(message = "样式类型不能为空")
-    private String styleType;
-
-    @Schema(description = "自定义样式配置")
-    private String customStyle;
+    /**
+     * 模版配置
+     */
+    @Schema(description = "模版配置")
+    @NotBlank(message = "模版配置不能为空")
+    private String templateConfig;
 
     @Schema(description = "分享图片地址", example = "https://www.iocoder.cn")
     private String shareImageUrl;

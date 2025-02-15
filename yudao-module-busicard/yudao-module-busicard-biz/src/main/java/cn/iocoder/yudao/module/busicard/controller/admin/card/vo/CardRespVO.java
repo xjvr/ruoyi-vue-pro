@@ -6,6 +6,9 @@ import java.util.*;
 import java.time.LocalDateTime;
 import com.alibaba.excel.annotation.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
 @Schema(description = "管理后台 - 名片 Response VO")
 @Data
 public class CardRespVO {
@@ -16,7 +19,7 @@ public class CardRespVO {
 
     @Schema(description = "名片编码", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("名片编码")
-    private String cardCode;
+    private String code;
 
     @Schema(description = "用户ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "4260")
     @ExcelProperty("用户ID")
@@ -25,10 +28,6 @@ public class CardRespVO {
     @Schema(description = "社交用户编号", example = "13313")
     @ExcelProperty("社交用户编号")
     private Long socialUserId;
-
-    @Schema(description = "是否默认名片", requiredMode = Schema.RequiredMode.REQUIRED)
-    @ExcelProperty("是否默认名片")
-    private Boolean isDefault;
 
     @Schema(description = "名片类型: personal-个人 company-企业", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
     @ExcelProperty("名片类型: personal-个人 company-企业")
@@ -50,49 +49,39 @@ public class CardRespVO {
     @ExcelProperty("头像地址")
     private String avatar;
 
-    @Schema(description = "个人手机号")
-    @ExcelProperty("个人手机号")
-    private String personalPhone;
+    @Schema(description = "手机号")
+    @ExcelProperty("手机号")
+    private String phone;
 
-    @Schema(description = "个人邮箱")
-    @ExcelProperty("个人邮箱")
-    private String personalEmail;
+    @Schema(description = "邮箱")
+    @ExcelProperty("邮箱")
+    private String email;
 
-    @Schema(description = "个人地址")
-    @ExcelProperty("个人地址")
-    private String personalAddress;
+    @Schema(description = "地址")
+    @ExcelProperty("地址")
+    private String address;
 
-    @Schema(description = "个人微信号")
-    @ExcelProperty("个人微信号")
-    private String personalWechat;
+    @Schema(description = "微信号")
+    @ExcelProperty("微信号")
+    private String wechat;
 
-    @Schema(description = "个人微信二维码")
-    @ExcelProperty("个人微信二维码")
-    private String personalQrcode;
+    @Schema(description = "微信二维码")
+    @ExcelProperty("微信二维码")
+    private String qrcode;
 
-    @Schema(description = "工号")
-    @ExcelProperty("工号")
-    private String employeeNo;
+    /**
+     * 模版code
+     */
+    @Schema(description = "模版code", requiredMode = Schema.RequiredMode.REQUIRED, example = "default")
+    @NotEmpty(message = "模版code不能为空")
+    private String templateCode;
 
-    @Schema(description = "办公电话")
-    @ExcelProperty("办公电话")
-    private String officePhone;
-
-    @Schema(description = "企业邮箱")
-    @ExcelProperty("企业邮箱")
-    private String officeEmail;
-
-    @Schema(description = "分机号")
-    @ExcelProperty("分机号")
-    private String extensionNumber;
-
-    @Schema(description = "样式类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @ExcelProperty("样式类型")
-    private String styleType;
-
-    @Schema(description = "自定义样式配置")
-    @ExcelProperty("自定义样式配置")
-    private String customStyle;
+    /**
+     * 模版配置
+     */
+    @Schema(description = "模版配置")
+    @NotBlank(message = "模版配置不能为空")
+    private String templateConfig;
 
     @Schema(description = "分享图片地址", example = "https://www.iocoder.cn")
     @ExcelProperty("分享图片地址")

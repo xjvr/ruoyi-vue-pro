@@ -49,7 +49,14 @@ public class CardServiceImpl implements CardService {
         // 插入
         CardDO card = BeanUtils.toBean(createReqVO, CardDO.class);
         // 名片编码
-        card.setCardCode(IdUtil.fastSimpleUUID());
+        card.setCode(IdUtil.fastSimpleUUID());
+        // 名片初始化
+        card.setTemplateCode("default");
+
+        card.setIsDefault(true);
+        card.setSaveCount(0);
+        card.setVisitCount(0);
+        card.setShareCount(0);
         cardMapper.insert(card);
         // 返回
         return card.getId();
@@ -97,7 +104,7 @@ public class CardServiceImpl implements CardService {
     @Override
     public AppCardRespVO getCardByCode(String code) {
         CardDO card = cardMapper.selectOne(Wrappers.<CardDO>lambdaQuery()
-                .eq(CardDO::getCardCode, code));
+                .eq(CardDO::getCode, code));
         if(card != null) {
             return BeanUtils.toBean(card, AppCardRespVO.class);
         }

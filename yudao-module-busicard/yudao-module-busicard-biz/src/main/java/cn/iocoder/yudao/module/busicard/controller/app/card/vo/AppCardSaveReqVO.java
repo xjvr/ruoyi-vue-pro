@@ -5,6 +5,7 @@ import lombok.*;
 import java.util.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -37,54 +38,20 @@ public class AppCardSaveReqVO {
     @Schema(description = "头像地址")
     private String avatar;
 
-    @Schema(description = "个人手机号")
-    private String personalPhone;
+    @Schema(description = "手机号")
+    private String phone;
 
-    @Schema(description = "个人邮箱")
-    private String personalEmail;
+    @Schema(description = "邮箱")
+    private String email;
 
-    @Schema(description = "个人地址")
-    private String personalAddress;
+    @Schema(description = "地址")
+    private String address;
 
-    @Schema(description = "个人微信号")
-    private String personalWechat;
+    @Schema(description = "微信号")
+    private String wechat;
 
-    @Schema(description = "个人微信二维码")
-    private String personalQrcode;
-
-    @Schema(description = "工号")
-    private String employeeNo;
-
-    @Schema(description = "办公电话")
-    private String officePhone;
-
-    @Schema(description = "企业邮箱")
-    private String officeEmail;
-
-    @Schema(description = "分机号")
-    private String extensionNumber;
-
-    @Schema(description = "样式类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @NotEmpty(message = "样式类型不能为空")
-    private String styleType;
-
-    @Schema(description = "自定义样式配置")
-    private String customStyle;
-
-    @Schema(description = "分享图片地址", example = "https://www.iocoder.cn")
-    private String shareImageUrl;
-
-    @Schema(description = "小程序码地址", example = "https://www.iocoder.cn")
-    private String qrcodeUrl;
-
-    @Schema(description = "访问次数", example = "13449")
-    private Integer visitCount;
-
-    @Schema(description = "保存次数", example = "25416")
-    private Integer saveCount;
-
-    @Schema(description = "分享次数", example = "28212")
-    private Integer shareCount;
+    @Schema(description = "微信二维码")
+    private String qrcode;
 
     @Schema(description = "最后访问时间")
     private LocalDateTime lastVisitTime;

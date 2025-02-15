@@ -10,18 +10,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Operation;
 
 import java.util.*;
-import java.io.IOException;
 
-import cn.iocoder.yudao.framework.common.pojo.PageParam;
-import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
-
-import cn.iocoder.yudao.framework.excel.core.util.ExcelUtils;
-
-import cn.iocoder.yudao.framework.apilog.core.annotation.ApiAccessLog;
-import static cn.iocoder.yudao.framework.apilog.core.enums.OperateTypeEnum.*;
 import static cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils.getLoginUserId;
 
 import cn.iocoder.yudao.module.busicard.controller.app.card.vo.*;
@@ -43,16 +35,16 @@ public class AppCardController {
     @Operation(summary = "获得默认名片")
     public CommonResult<AppCardRespVO> getDefaultCard() {
         Long userId = getLoginUserId();
-        return success(cardService.getdefaultCard(getLoginUserId()));
+        return success(cardService.getdefaultCard(userId));
     }
 
 
     @GetMapping("/get")
     @Operation(summary = "获得名片")
     @Parameter(name = "id", description = "ID", required = true, example = "1024")
-    public CommonResult<CardRespVO> getCard(@RequestParam("id") Long id) {
+    public CommonResult<AppCardRespVO> getCard(@RequestParam("id") Long id) {
         CardDO card = cardService.getCard(id);
-        return success(BeanUtils.toBean(card, CardRespVO.class));
+        return success(BeanUtils.toBean(card, AppCardRespVO.class));
     }
 
     @GetMapping("/get-by-code")

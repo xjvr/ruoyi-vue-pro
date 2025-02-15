@@ -32,15 +32,11 @@ public class CardDO extends BaseDO {
     /**
      * 名片编码
      */
-    private String cardCode;
+    private String code;
     /**
      * 用户ID
      */
     private Long userId;
-    /**
-     * 社交用户编号
-     */
-    private Long socialUserId;
     /**
      * 是否默认名片
      */
@@ -66,49 +62,36 @@ public class CardDO extends BaseDO {
      */
     private String avatar;
     /**
-     * 个人手机号
+     * 手机号
      */
-    private String personalPhone;
+    private String phone;
     /**
-     * 个人邮箱
+     * 邮箱
      */
-    private String personalEmail;
+    private String email;
     /**
-     * 个人地址
+     * 地址
      */
-    private String personalAddress;
+    private String address;
     /**
-     * 个人微信号
+     * 微信号
      */
-    private String personalWechat;
+    private String wechat;
     /**
-     * 个人微信二维码
+     * 微信二维码
      */
-    private String personalQrcode;
+    private String qrcode;
+
     /**
-     * 工号
+     * 模版code
      */
-    private String employeeNo;
+    private String templateCode;
+
     /**
-     * 办公电话
+     * 模版配置
      */
-    private String officePhone;
-    /**
-     * 企业邮箱
-     */
-    private String officeEmail;
-    /**
-     * 分机号
-     */
-    private String extensionNumber;
-    /**
-     * 样式类型
-     */
-    private String styleType;
-    /**
-     * 自定义样式配置
-     */
-    private String customStyle;
+    private String templateConfig;
+
     /**
      * 分享图片地址
      */

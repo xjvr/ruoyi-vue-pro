@@ -5,6 +5,9 @@ import java.util.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import cn.iocoder.yudao.framework.common.pojo.PageParam;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 
 import static cn.iocoder.yudao.framework.common.util.date.DateUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND;
@@ -16,7 +19,7 @@ import static cn.iocoder.yudao.framework.common.util.date.DateUtils.FORMAT_YEAR_
 public class AppCardPageReqVO extends PageParam {
 
     @Schema(description = "名片编码")
-    private String cardCode;
+    private String code;
 
     @Schema(description = "用户ID", example = "4260")
     private Long userId;
@@ -39,38 +42,34 @@ public class AppCardPageReqVO extends PageParam {
     @Schema(description = "头像地址")
     private String avatar;
 
-    @Schema(description = "个人手机号")
-    private String personalPhone;
+    @Schema(description = "手机号")
+    private String phone;
 
-    @Schema(description = "个人邮箱")
-    private String personalEmail;
+    @Schema(description = "邮箱")
+    private String email;
 
-    @Schema(description = "个人地址")
-    private String personalAddress;
+    @Schema(description = "地址")
+    private String address;
 
-    @Schema(description = "个人微信号")
-    private String personalWechat;
+    @Schema(description = "微信号")
+    private String wechat;
 
-    @Schema(description = "个人微信二维码")
-    private String personalQrcode;
+    @Schema(description = "微信二维码")
+    private String qrcode;
 
-    @Schema(description = "工号")
-    private String employeeNo;
+    /**
+     * 模版code
+     */
+    @Schema(description = "模版code", requiredMode = Schema.RequiredMode.REQUIRED, example = "default")
+    @NotEmpty(message = "模版code不能为空")
+    private String templateCode;
 
-    @Schema(description = "办公电话")
-    private String officePhone;
-
-    @Schema(description = "企业邮箱")
-    private String officeEmail;
-
-    @Schema(description = "分机号")
-    private String extensionNumber;
-
-    @Schema(description = "样式类型", example = "1")
-    private String styleType;
-
-    @Schema(description = "自定义样式配置")
-    private String customStyle;
+    /**
+     * 模版配置
+     */
+    @Schema(description = "模版配置")
+    @NotBlank(message = "模版配置不能为空")
+    private String templateConfig;
 
     @Schema(description = "分享图片地址", example = "https://www.iocoder.cn")
     private String shareImageUrl;
