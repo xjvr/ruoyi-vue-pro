@@ -53,6 +53,12 @@ public enum SocialTypeEnum implements IntArrayValuable {
      * @see <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/login.html">接入文档</a>
      */
     WECHAT_MINI_APP(34, "WECHAT_MINI_APP"),
+
+    /**
+     * LDAP
+     */
+    LDAP(40, "LDAP"),
+
     ;
 
     public static final int[] ARRAYS = Arrays.stream(values()).mapToInt(SocialTypeEnum::getType).toArray();

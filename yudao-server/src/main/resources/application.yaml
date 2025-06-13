@@ -52,6 +52,14 @@ knife4j:
   setting:
     language: zh_cn
 
+auth:
+  cas:
+    enable: true
+    casServerUrl: http://CAS服务器地址
+    clientId: wiztek-pc //端ID
+
+
+
 # 工作流 Flowable 配置
 flowable:
   # 1. false: 默认值，Flowable 启动时，对比数据库表中保存的版本，如果不匹配。将抛出异常
