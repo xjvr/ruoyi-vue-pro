@@ -41,6 +41,9 @@ public class AppProductSpuRespVO {
     @Schema(description = "库存", requiredMode = Schema.RequiredMode.REQUIRED, example = "666")
     private Integer stock;
 
+    @Schema(description = "商品 SPU 的 SKU 编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
+    private Long skuId;
+
     // ========== 营销相关字段 =========
 
     // ========== 统计相关字段 =========

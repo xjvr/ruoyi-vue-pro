@@ -27,7 +27,9 @@ import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
@@ -76,6 +78,18 @@ public class AppProductSpuController {
         // 拼接返回
         pageResult.getList().forEach(spu -> spu.setSalesCount(spu.getSalesCount() + spu.getVirtualSalesCount()));
         PageResult<AppProductSpuRespVO> voPageResult = BeanUtils.toBean(pageResult, AppProductSpuRespVO.class);
+
+        // 单规格商品返回skuId
+        List<AppProductSpuRespVO> list = voPageResult.getList();
+        List<Long> spuIds = list.stream().filter(spu -> !spu.getSpecType()).map(AppProductSpuRespVO::getId).collect(Collectors.toList());
+        List<ProductSkuDO> skus = productSkuService.getSkuListBySpuId(spuIds);
+        Map<Long , ProductSkuDO> skuMap = skus.stream().collect(Collectors.toMap(ProductSkuDO::getSpuId, v -> v));
+        list.forEach(spu -> {
+            if (!spu.getSpecType() && skuMap.containsKey(spu.getId())) {
+                spu.setSkuId(skuMap.get(spu.getId()).getId());
+            }
+        });
+        voPageResult.setList(list);
         return success(voPageResult);
     }
 
