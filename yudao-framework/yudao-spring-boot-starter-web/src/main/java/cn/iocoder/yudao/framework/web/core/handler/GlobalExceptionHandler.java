@@ -5,6 +5,8 @@ import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.iocoder.yudao.framework.common.biz.infra.logger.ApiErrorLogCommonApi;
+import cn.iocoder.yudao.framework.common.biz.infra.logger.dto.ApiErrorLogCreateReqDTO;
 import cn.iocoder.yudao.framework.common.exception.ServiceException;
 import cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
@@ -13,9 +15,8 @@ import cn.iocoder.yudao.framework.common.util.json.JsonUtils;
 import cn.iocoder.yudao.framework.common.util.monitor.TracerUtils;
 import cn.iocoder.yudao.framework.common.util.servlet.ServletUtils;
 import cn.iocoder.yudao.framework.web.core.util.WebFrameworkUtils;
-import cn.iocoder.yudao.framework.common.biz.infra.logger.ApiErrorLogCommonApi;
-import cn.iocoder.yudao.framework.common.biz.infra.logger.dto.ApiErrorLogCreateReqDTO;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -24,6 +25,7 @@ import org.springframework.util.Assert;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -93,17 +95,20 @@ public class GlobalExceptionHandler {
         if (ex instanceof NoHandlerFoundException) {
             return noHandlerFoundExceptionHandler((NoHandlerFoundException) ex);
         }
-//        if (ex instanceof NoResourceFoundException) {
-//            return noResourceFoundExceptionHandler(request, (NoResourceFoundException) ex);
-//        }
         if (ex instanceof HttpRequestMethodNotSupportedException) {
             return httpRequestMethodNotSupportedExceptionHandler((HttpRequestMethodNotSupportedException) ex);
+        }
+        if (ex instanceof HttpMediaTypeNotSupportedException) {
+            return httpMediaTypeNotSupportedExceptionHandler((HttpMediaTypeNotSupportedException) ex);
         }
         if (ex instanceof ServiceException) {
             return serviceExceptionHandler((ServiceException) ex);
         }
         if (ex instanceof AccessDeniedException) {
             return accessDeniedExceptionHandler(request, (AccessDeniedException) ex);
+        }
+        if (ex instanceof UncheckedExecutionException && ex.getCause() != ex) {
+            return allExceptionHandler(request, ex.getCause());
         }
         return defaultExceptionHandler(request, ex);
     }
@@ -169,17 +174,19 @@ public class GlobalExceptionHandler {
     /**
      * 处理 SpringMVC 请求参数类型错误
      *
-     * 例如说，接口上设置了 @RequestBody实体中 xx 属性类型为 Integer，结果传递 xx 参数类型为 String
+     * 例如说，接口上设置了 @RequestBody 实体中 xx 属性类型为 Integer，结果传递 xx 参数类型为 String
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public CommonResult<?> methodArgumentTypeInvalidFormatExceptionHandler(HttpMessageNotReadableException ex) {
         log.warn("[methodArgumentTypeInvalidFormatExceptionHandler]", ex);
-        if(ex.getCause() instanceof InvalidFormatException) {
+        if (ex.getCause() instanceof InvalidFormatException) {
             InvalidFormatException invalidFormatException = (InvalidFormatException) ex.getCause();
             return CommonResult.error(BAD_REQUEST.getCode(), String.format("请求参数类型错误:%s", invalidFormatException.getValue()));
-        }else {
-            return defaultExceptionHandler(ServletUtils.getRequest(), ex);
         }
+        if (StrUtil.startWith(ex.getMessage(), "Required request body is missing")) {
+            return CommonResult.error(BAD_REQUEST.getCode(), "请求参数类型错误: request body 缺失");
+        }
+        return defaultExceptionHandler(ServletUtils.getRequest(), ex);
     }
 
     /**
@@ -215,15 +222,6 @@ public class GlobalExceptionHandler {
         return CommonResult.error(NOT_FOUND.getCode(), String.format("请求地址不存在:%s", ex.getRequestURL()));
     }
 
-//    /**
-//     * 处理 SpringMVC 请求地址不存在
-//     */
-//    @ExceptionHandler(NoResourceFoundException.class)
-//    private CommonResult<?> noResourceFoundExceptionHandler(HttpServletRequest req, NoResourceFoundException ex) {
-//        log.warn("[noResourceFoundExceptionHandler]", ex);
-//        return CommonResult.error(NOT_FOUND.getCode(), String.format("请求地址不存在:%s", ex.getResourcePath()));
-//    }
-
     /**
      * 处理 SpringMVC 请求方法不正确
      *
@@ -236,6 +234,17 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 处理 SpringMVC 请求的 Content-Type 不正确
+     *
+     * 例如说，A 接口的 Content-Type 为 application/json，结果请求的 Content-Type 为 application/octet-stream，导致不匹配
+     */
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public CommonResult<?> httpMediaTypeNotSupportedExceptionHandler(HttpMediaTypeNotSupportedException ex) {
+        log.warn("[httpMediaTypeNotSupportedExceptionHandler]", ex);
+        return CommonResult.error(BAD_REQUEST.getCode(), String.format("请求类型不正确:%s", ex.getMessage()));
+    }
+
+    /**
      * 处理 Spring Security 权限不足的异常
      *
      * 来源是，使用 @PreAuthorize 注解，AOP 进行权限拦截
@@ -245,6 +254,16 @@ public class GlobalExceptionHandler {
         log.warn("[accessDeniedExceptionHandler][userId({}) 无法访问 url({})]", WebFrameworkUtils.getLoginUserId(req),
                 req.getRequestURL(), ex);
         return CommonResult.error(FORBIDDEN);
+    }
+
+    /**
+     * 处理 Guava UncheckedExecutionException
+     *
+     * 例如说，缓存加载报错，可见 <a href="https://t.zsxq.com/UszdH">https://t.zsxq.com/UszdH</a>
+     */
+    @ExceptionHandler(value = UncheckedExecutionException.class)
+    public CommonResult<?> uncheckedExecutionExceptionHandler(HttpServletRequest req, UncheckedExecutionException ex) {
+        return allExceptionHandler(req, ex.getCause());
     }
 
     /**

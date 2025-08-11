@@ -3,6 +3,7 @@ package cn.iocoder.yudao.framework.common.util.date;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.date.TemporalAccessorUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import cn.iocoder.yudao.framework.common.enums.DateIntervalEnum;
@@ -19,7 +20,7 @@ import static cn.hutool.core.date.DatePattern.UTC_MS_WITH_XXX_OFFSET_PATTERN;
 import static cn.hutool.core.date.DatePattern.createFormatter;
 
 /**
- * 时间工具类，用于 {@link java.time.LocalDateTime}
+ * 时间工具类，用于 {@link LocalDateTime}
  *
  * @author 芋道源码
  */
@@ -68,17 +69,17 @@ public class LocalDateTimeUtils {
      * 创建指定时间
      *
      * @param year  年
-     * @param mouth 月
+     * @param month 月
      * @param day   日
      * @return 指定时间
      */
-    public static LocalDateTime buildTime(int year, int mouth, int day) {
-        return LocalDateTime.of(year, mouth, day, 0, 0, 0);
+    public static LocalDateTime buildTime(int year, int month, int day) {
+        return LocalDateTime.of(year, month, day, 0, 0, 0);
     }
 
-    public static LocalDateTime[] buildBetweenTime(int year1, int mouth1, int day1,
-                                                   int year2, int mouth2, int day2) {
-        return new LocalDateTime[]{buildTime(year1, mouth1, day1), buildTime(year2, mouth2, day2)};
+    public static LocalDateTime[] buildBetweenTime(int year1, int month1, int day1,
+                                                   int year2, int month2, int day2) {
+        return new LocalDateTime[]{buildTime(year1, month1, day1), buildTime(year2, month2, day2)};
     }
 
     /**
@@ -310,6 +311,18 @@ public class LocalDateTimeUtils {
             default:
                 throw new IllegalArgumentException("Invalid interval: " + interval);
         }
+    }
+
+    /**
+     * 将给定的 {@link LocalDateTime} 转换为自 Unix 纪元时间（1970-01-01T00:00:00Z）以来的秒数。
+     *
+     * @param sourceDateTime 需要转换的本地日期时间，不能为空
+     * @return 自 1970-01-01T00:00:00Z 起的秒数（epoch second）
+     * @throws NullPointerException 如果 {@code sourceDateTime} 为 {@code null}
+     * @throws DateTimeException 如果转换过程中发生时间超出范围或其他时间处理异常
+     */
+    public static Long toEpochSecond(LocalDateTime sourceDateTime) {
+        return TemporalAccessorUtil.toInstant(sourceDateTime).getEpochSecond();
     }
 
 }
